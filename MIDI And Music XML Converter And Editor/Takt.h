@@ -22,9 +22,7 @@ public:
 	int getBrTakta();
 	int getStvarniBrTakta();
 	Razlomak& getZauzeto();
-	//MMMMMMMMMMMMMMMMMMMMMMMMMMMMM
 	std::vector<std::vector<std::shared_ptr<Simbol>>>& getVctSimbola();
-	//MMMMMMMMMMMMMMMMMMMMMMMMMMMM
 	std::vector<std::vector<std::shared_ptr<Simbol>>>::iterator& getIterVectSimb();
 	std::vector<std::shared_ptr<Simbol>>::iterator& getIterSimbol();
 	void setIterVectorSimbol(std::vector<std::vector<std::shared_ptr<Simbol>>>::iterator iterator_);
