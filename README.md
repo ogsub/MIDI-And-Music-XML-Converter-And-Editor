@@ -1,5 +1,3 @@
-# MIDI-And-Music-XML-Converter-And-Editor
- A program used for converting ASCII to MXML and MIDI
 # MIDI And Music XML Converter And Editor
  Multithreaded project that simulate file system
 
