@@ -39,17 +39,6 @@ void MIDIFormater::konvertujMIDI(std::pair<std::vector<std::vector<int>>, std::v
 	int i = 0;
 	int actiontime = 0;
 	midievent[2] = 64;
-	///////////////////////////////////////////////////
-	/*while (melody[i] >= 0) {
-		midievent[0] = 0x90;
-		midievent[1] = melody[i];
-		outputfile.addEvent(0, actiontime, midievent);
-		actiontime += tpq / 2 * mrhythm[i];
-		midievent[0] = 0x80;
-		outputfile.addEvent(0, actiontime, midievent);
-		i++;
-	}*/
-	//////////////////////////////////////////////////
 
 	std::for_each(melodyLeva.begin(), melodyLeva.end(), [&i, &midievent, &actiontime, &outputfile, &tpq, &ritamLeva](std::vector<int>& simboli) {
 		int pomocna;
@@ -99,18 +88,6 @@ void MIDIFormater::konvertujMIDI(std::pair<std::vector<std::vector<int>>, std::v
 			actiontime += tpq / 2 * 2;
 		i++;
 	});
-	/*i = 0;
-	actiontime = 0;
-	while (bass[i] >= 0) {
-		midievent[0] = 0x90;
-		midievent[1] = bass[i];
-		outputfile.addEvent(1, actiontime, midievent);
-		actiontime += tpq / 2 * brhythm[i];
-		midievent[0] = 0x80;
-		outputfile.addEvent(1, actiontime, midievent);
-		i++;
-	}
-	*/
 
 	outputfile.sortTracks();
 	outputfile.write("out.mid");
