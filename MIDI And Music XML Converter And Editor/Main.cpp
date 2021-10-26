@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {	//ime programa, putanja mape, putanja kompozi
 			"12. Konvertuj u MIDI fajl\n"
 			"13. Konvertuj u MXML fajl\n"
 			"14.Ukloni povisilicu\n"
-			"15 Generisi BMI fajl\n"
+			"15 Generisi BMI fajl (in progress)\n"
 			"16. Izadji\n";
 		
 		std::cin >> meni;
@@ -232,7 +232,7 @@ int main(int argc, char *argv[]) {	//ime programa, putanja mape, putanja kompozi
 		}
 		case 15:
 		{
-			if (otvorena) {
+			/*if (otvorena) {
 				int visina;
 				int sirina;
 				std::cout << "Unesi visinu\n";
@@ -244,7 +244,7 @@ int main(int argc, char *argv[]) {	//ime programa, putanja mape, putanja kompozi
 				bmp->postaviPiksel(sirina / 2, visina / 2, 255, 255, 255);
 				bmp->ispisi("out.bmp");
 			}
-			else std::cout << "Kompozicija nije otvorena\n";
+			else std::cout << "Kompozicija nije otvorena\n";*/
 			break;
 		}
 		case 16:
