@@ -13,5 +13,9 @@ and so on.
 
 ## Instruction
  Directory examples/ contains input files. Copy one to MIDI-And-Music-CML-Converter-And-Editor/ directory. Start the program using Visual Studio with two command line arguments: first - "map.csv" and second - name of the input file that you copied. You will be met with Menu.
+ 
+## Tips
+ Use https://www.soundslice.com/musicxml-viewer/ to visualize MXML files and VLC player with codec for MIDI audio.
+
 ### Info
  Developed using Visual Studio 2019.
