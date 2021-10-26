@@ -31,37 +31,36 @@ void MXMLFormater::konvertujMXML(std::pair<std::vector<std::vector<std::string>>
 		Razlomak trenutno(0, 8);
 		noteHeader(oFile, leva, kompozicija->getTrajanjeTakta().getRazlomak().getBrojilac(), kompozicija->getTrajanjeTakta().getRazlomak().getImenilac());
 		int i = 0;
-		//std::for_each(jedanOpis.begin(), jedanOpis.end(), [&oFile, &i, &trajanja, this, &trenutno, &trajanjeTakta, &jedanOpis](std::vector<std::string> sVct) {
-			for (auto sVct = jedanOpis.begin(); sVct != jedanOpis.end(); sVct++) {
-				bool poslednji = false;
-				if (sVct == jedanOpis.end() - 1)
-					poslednji = true;
-				std::vector<std::string> vektorPrekinutih;
-				int chordCnt = 0;
-				bool prekinuta = false;
-				bool PrviDrugiDeo = true; //da znam da li je prvi ili drugi deo prekinute
-				//std::for_each(sVct.begin(), sVct.end(), [&vektorPrekinutih, &oFile, &chordCnt, &i, &trajanja, &prekinuta, &PrviDrugiDeo, this, &trenutno, &trajanjeTakta](std::string s) {
-				for (std::vector<std::string>::iterator it = (*sVct).begin(); it != (*sVct).end(); it++) {
-					bool poslednjiSimultan = false;
-					if (it == (*sVct).end() - 1)
-						poslednjiSimultan = true;
-					dodajNotu(poslednji, poslednjiSimultan, it, oFile, chordCnt, i, trajanja, prekinuta, PrviDrugiDeo, trenutno, trajanjeTakta, vektorPrekinutih, (*sVct), jedanOpis);
-				}
-				//});
-				if (vektorPrekinutih.size() > 0)
-					i = i - 1;
-				chordCnt = 0;
-				for (std::vector<std::string>::iterator it = vektorPrekinutih.begin(); it != vektorPrekinutih.end(); it++) {
-					bool poslednjiSimultan = false;
-					if (it == vektorPrekinutih.end() - 1)
-						poslednjiSimultan = true;
-					dodajNotu(poslednji, poslednjiSimultan, it, oFile, chordCnt, i, trajanja, prekinuta, PrviDrugiDeo, trenutno, trajanjeTakta, vektorPrekinutih, vektorPrekinutih, jedanOpis);
-				}
+		for (auto sVct = jedanOpis.begin(); sVct != jedanOpis.end(); sVct++) {
+			bool poslednji = false;
+			if (sVct == jedanOpis.end() - 1)
+				poslednji = true;
+			std::vector<std::string> vektorPrekinutih;
+			int chordCnt = 0;
+			bool prekinuta = false;
+			bool PrviDrugiDeo = true; //da znam da li je prvi ili drugi deo prekinute
+
+			for (std::vector<std::string>::iterator it = (*sVct).begin(); it != (*sVct).end(); it++) {
+				bool poslednjiSimultan = false;
+				if (it == (*sVct).end() - 1)
+					poslednjiSimultan = true;
+				dodajNotu(poslednji, poslednjiSimultan, it, oFile, chordCnt, i, trajanja, prekinuta, PrviDrugiDeo, trenutno, trajanjeTakta, vektorPrekinutih, (*sVct), jedanOpis);
 			}
-		//});
+
+			if (vektorPrekinutih.size() > 0)
+				i = i - 1;
+			chordCnt = 0;
+			for (std::vector<std::string>::iterator it = vektorPrekinutih.begin(); it != vektorPrekinutih.end(); it++) {
+				bool poslednjiSimultan = false;
+				if (it == vektorPrekinutih.end() - 1)
+					poslednjiSimultan = true;
+				dodajNotu(poslednji, poslednjiSimultan, it, oFile, chordCnt, i, trajanja, prekinuta, PrviDrugiDeo, trenutno, trajanjeTakta, vektorPrekinutih, vektorPrekinutih, jedanOpis);
+			}
+		}
+	
 		jedanOpis = opisi.second;
 		leva = true;
-		oFile << //"</measure>\n"
+		oFile << 
 			"</part>\n";
 	}
 	oFile << "</score-partwise>\n";
@@ -72,7 +71,6 @@ void MXMLFormater::konvertujMXML(std::pair<std::vector<std::vector<std::string>>
 //poslednji sluzi da znam da li je gotov poslednji od simultanih pre nego sto treba da stavim takt
 //poslednjiSimultan sluzi za slucaj kada je poslednji u taktu onaj koji je drugi deo simultanih (npr kad takt traje 1/8)
 void MXMLFormater::dodajNotu(bool poslednji, bool poslednjiSimultan, std::vector<std::string>::iterator s, std::ostream & oFile, int &chordCnt, int & i, std::vector<int>& trajanja, bool prekinuta, bool& PrviDrugiDeo, Razlomak& trenutno, Razlomak& trajanjeTakta, std::vector<std::string>& vektorPrekinutih, std::vector<std::string>& sVct, std::vector<std::vector<std::string>> vektorVektora) {
-	//bool prekinuta = false;
 	if (!PrviDrugiDeo && s == sVct.begin()) {//prekinuta && !PrviDrugiDeo) {
 		oFile << "</measure>\n"
 			"<measure>\n";
@@ -127,47 +125,33 @@ void MXMLFormater::dodajNotu(bool poslednji, bool poslednjiSimultan, std::vector
 		if(!(chordCnt - 1))
 			trenutno = trenutno + Razlomak(1, 8);
 	}
-	/*
-	if (prekinuta && !PrviDrugiDeo) {
-		oFile << "</measure>\n"
-			"<measure>";
-		trenutno = Razlomak(0, 8);
-	}
-	*/
+	
 	i++;
-	if (prekinuta) { //&& PrviDrugiDeo) {
+	if (prekinuta) { 
 		oFile << "<tie type=\"start\"/>\n";
 		oFile << "</note>\n";
 		if(s == (sVct.end() - 1))
 			PrviDrugiDeo = false;
-		//dodajNotu(s, oFile, --chordCnt, --i, trajanja, prekinuta, PrviDrugiDeo, trenutno, trajanjeTakta);
 		return;
 	}
-	else if (!PrviDrugiDeo) { //&& s == (sVct.end() - 1)) {//prekinuta && !PrviDrugiDeo) {
+	else if (!PrviDrugiDeo) { 
 		oFile << "<tie type=\"end\"/>\n";
-		//PrviDrugiDeo = true;
 	}
 	
 	oFile << "</note>\n";
 
 	if ((trenutno == trajanjeTakta && sVct.size() == 1)) {
 		oFile << "</measure>\n";
-		if(!poslednji)	//find(vektorVektora.begin(), vektorVektora.end(), sVct) != (vektorVektora.end() - 1))					//if(sVct != *(vektorVektora.end() - 1)) // ovde moze potencijalno da dodje do greske ali su male sanse
+		if(!poslednji)	
 			oFile << "<measure>\n";
 		trenutno = Razlomak(0, 8);
 	}
 	else if (trenutno == trajanjeTakta && poslednjiSimultan) {
 		oFile << "</measure>\n";
-		if (!poslednji)	//find(vektorVektora.begin(), vektorVektora.end(), sVct) != (vektorVektora.end() - 1))					//if(sVct != *(vektorVektora.end() - 1)) // ovde moze potencijalno da dodje do greske ali su male sanse
+		if (!poslednji)	
 			oFile << "<measure>\n";
 		trenutno = Razlomak(0, 8);
 	}
-	/*else if(trenutno == trajanjeTakta && PrviDrugiDeo) {
-		oFile << "</measure>\n";
-		if (!poslednji)	//find(vektorVektora.begin(), vektorVektora.end(), sVct) != (vektorVektora.end() - 1))					//if(sVct != *(vektorVektora.end() - 1)) // ovde moze potencijalno da dodje do greske ali su male sanse
-			oFile << "<measure>\n";
-		trenutno = Razlomak(0, 8);
-	}*/
 }
 
 void MXMLFormater::noteHeader(std::ostream & file, bool DesnaLeva, int brojilac, int imenilac) {
