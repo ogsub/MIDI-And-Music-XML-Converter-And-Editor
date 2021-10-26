@@ -21,17 +21,10 @@ void Kompozicija::otvoriKompoziciju(int argc, char* argv[]) {
 		return;
 	}
 	bool tacnaPutanja = false;
-	while (!tacnaPutanja) {
-		//std::cout << "Unesi putanju do kompozicije\n";
-
-		//std::cin.clear(); // reset failbit
-		//std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-
-		//std::getline(std::cin, putanja);
-		//putanja = "C:\\Users\\Ognjen\\Desktop\\New Text Document.txt";// C:\\Users\\Ognjen\\Desktop\\POOPzad\\input\\ode_to_joy.txt";//"C:\\Users\\Ognjen\\Desktop\\POOPzad\\input\\fur_elise.txt"; //"C:\\Users\\Ognjen\\Desktop\\New Text Document.txt";//"C:\\Users\\Ognjen\\Desktop\\POOPzad\\input\\fur_elise.txt"
+	while (!tacnaPutanja) {		
 		if (argc > 2)
 			putanja = argv[2];
-		////////////////////////////////
+
 		kompozicija.open(putanja);
 
 		if (!kompozicija.fail()) {
@@ -144,12 +137,10 @@ void Kompozicija::ucitajNote(Mapa& mapa, int menjajOktavu) {
 					std::string opisNote = mapa.getOpisNote(slovo);
 					//sva slova smo stavili u vektor nota za levu i za desnu ruku.
 					if (mapa.getOktava(opisNote) + menjajOktavu <= 3) {
-						//MMMMMMMMMMMMMMMMMMMMMMMMMM
 						std::shared_ptr<Nota> n = std::make_shared<Nota>(mapa.getOktava(opisNote), mapa.getVisina(opisNote), Razlomak(1, 4), mapa.getPovisilica(opisNote));
 						simboliLeva.push_back(n);
 					}
 					else {
-						//MMMMMMMMMMMMMMMMMMMMMMMMMM
 						std::shared_ptr<Nota> n = std::make_shared<Nota>(mapa.getOktava(opisNote), mapa.getVisina(opisNote), Razlomak(1, 4), mapa.getPovisilica(opisNote));
 						simboliDesna.push_back(n);
 					}
@@ -172,11 +163,9 @@ void Kompozicija::ucitajNote(Mapa& mapa, int menjajOktavu) {
 			break;
 		case '|': //pauza 1/4
 
-			////////////////////////////////////
 			std::for_each(vctLinSis.begin(), vctLinSis.end(), [this, &mapa](LinijskiSistem& linijskiSis) {
 				pomocSlovo(&mapa, linijskiSis, '|', false, false);
 			});
-			///////////////////////////////////
 
 			break;
 		default: //trazi notu i bradjuje je
@@ -225,8 +214,7 @@ void Kompozicija::prikaziZadnjiSimbol(bool ispisi) {
 
 void Kompozicija::nextSimbol() {
 	bool ispisi = true;
-	std::for_each(vctLinSis.begin(), vctLinSis.end(), [this, &ispisi](LinijskiSistem& linSis) {
-		//if (++linSis.getIterTakt()->getIterSimbol() == linSis.getIterTakt()->getIterVectSimb()->end()) { //ovo je bilo za ako idemo notu po notu i u preklopljenim
+	std::for_each(vctLinSis.begin(), vctLinSis.end(), [this, &ispisi](LinijskiSistem& linSis) {		
 		if (!ispisi) //znaci ako je usao tamo da treba da vrati na pocetak, ne treba da odradi jos jedno za sledeci linijski sistem(povratak na pocetak vraca iteratore i jednog i drugog linijskog sistema)
 			return;
 		int brPonavljanja = 1;
@@ -239,10 +227,9 @@ void Kompozicija::nextSimbol() {
 					return;
 				}
 				else {
-					//vctLinSis.front().setIterTakt(vctLinSis.front().getIterTakt());// ne treba ++u argumentu za set jer je ovaj gore if ostavio bocne efekte
 					linSis.getIterTakt()->setIterVectorSimbol(linSis.getIterTakt()->getVctSimbola().begin());
 					linSis.getIterTakt()->setIterSimbol(linSis.getIterTakt()->getIterVectSimb()->begin());
-					//Mislim da ovde ne treba ovo jer na pocetku takta ne moze da bude prekinuta
+					
 					if ((*linSis.getIterTakt()->getIterSimbol())->getPrekinuta())
 						brPonavljanja++;
 				}
@@ -253,7 +240,7 @@ void Kompozicija::nextSimbol() {
 					brPonavljanja++;
 			}
 		}
-		//}
+		
 	});
 }
 
@@ -272,12 +259,8 @@ void Kompozicija::prewSimbol() {
 					return;
 				}
 				else {
-					//vctLinSis.front().setIterTakt(vctLinSis.front().getIterTakt());// ne treba ++u argumentu za set jer je ovaj gore if ostavio bocne efekte
 					linSis.getIterTakt()->setIterVectorSimbol(--(--linSis.getIterTakt())->getVctSimbola().end());
 					linSis.getIterTakt()->setIterSimbol(linSis.getIterTakt()->getIterVectSimb()->begin());
-					//Mislim da ovde ne treba ovo jer na pocetku takta ne moze da bude prekinuta
-					//if ((*linSis.getIterTakt()->getIterSimbol())->getPrekinuta())
-					//	brPonavljanja++;
 				}
 			}
 			else {
@@ -334,30 +317,7 @@ void Kompozicija::prewTakt() {
 	});
 }
 
-void Kompozicija::ispisLinijskihSistema() {
-	/*std::shared_ptr<std::string>st= std::make_shared<std::string>();
-
-	std::for_each(vctLinSis.begin(), vctLinSis.end(), [st](LinijskiSistem itLinSis) {
-		
-		std::for_each(itLinSis.getVctTakt().begin(), itLinSis.getVctTakt().end(), [st](Takt it1) {
-			
-			std::for_each(it1.getVctSimbola().begin(), it1.getVctSimbola().end(), [st](std::vector<std::shared_ptr<Simbol>> it2) {
-				*st = *st + "(";
-				
-				std::for_each(it2.begin(), it2.end(), [st](std::shared_ptr<Simbol> s) {
-					*st = *st + s->ispisivanjePodataka();
-				});
-				
-				*st = *st + ")";
-			});
-			
-			std::cout<< std::setw(30)<< *st << "|";
-			st->clear();
-		});
-		
-		std::cout << "\n-----------------------------------------------------------------------------------------------------------------------\n";
-	});*/
-	
+void Kompozicija::ispisLinijskihSistema() {	
 	std::shared_ptr<std::string>st = std::make_shared<std::string>();
 	
 	std::ofstream ispis;
@@ -424,7 +384,6 @@ void Kompozicija::pomocSlovo(Mapa* mapa_, LinijskiSistem& linijskiSis, char slov
 		Takt t1 = Takt(this->getTrajanjeTakta());
 		linijskiSis.dodajTakt(t1);//ako je vektor taktova prazan, ili je poslednji vektor pun, dodamo novi takt u vctTakt;
 		p->setBrojTakta(linijskiSis.getVctTakt().back().getBrTakta());
-		/////////////////////////////NOVONOVO
 		if(linijskiSis.getVctTakt().back().imaMesta(p))										///
 			linijskiSis.getVctTakt().back().dodajSimbol(p);// samo ovo je bilo pre ovoga	///
 		else {
@@ -433,10 +392,8 @@ void Kompozicija::pomocSlovo(Mapa* mapa_, LinijskiSistem& linijskiSis, char slov
 			p->setBrojTakta(linijskiSis.getVctTakt().back().getBrTakta());
 			linijskiSis.getVctTakt().back().dodajSimbol(p);
 			linijskiSis.dodajTakt(Takt(this->getTrajanjeTakta()));
-			//p->setPrekinuta(false);/////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 			linijskiSis.getVctTakt().back().dodajSimbol(p);
 		}
-		///////////////////////////////////////////////////NOVONOVO
 	}																						///
 	else if (!linijskiSis.getVctTakt().back().getPopunjen() && !linijskiSis.getVctTakt().back().imaMesta(p)) {//slucaj kada nije popunjena i nema mesta, mora da se deli na 2 dela i flag podeljen da se postavi na true
 		p->getTrajanje().setRazlomak(Razlomak(1, 8));
@@ -444,7 +401,6 @@ void Kompozicija::pomocSlovo(Mapa* mapa_, LinijskiSistem& linijskiSis, char slov
 		p->setBrojTakta(linijskiSis.getVctTakt().back().getBrTakta());
 		linijskiSis.getVctTakt().back().dodajSimbol(p);
 		linijskiSis.dodajTakt(Takt(this->getTrajanjeTakta()));
-		//p->setPrekinuta(false);/////////////////////AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		linijskiSis.getVctTakt().back().dodajSimbol(p);
 	}
 	else {
@@ -475,9 +431,8 @@ void Kompozicija::pomocSlova(Mapa* mapa_, std::vector<std::shared_ptr<Simbol>>& 
 
 			Takt t1 = Takt(this->getTrajanjeTakta());
 			it->dodajTakt(t1);//ako je vektor taktova prazan, ili je poslednji vektor pun, dodamo novi takt u vctTakt;
-			////////////////////////////////NOVONOVONOVO
 			if(it->getVctTakt().back().imaMesta(simboli.back()))
-				it->getVctTakt().back().dodajSimbole(simboli);// dodaj simbole im dodeljuje i BrTakta               //VEC JE BILO
+				it->getVctTakt().back().dodajSimbole(simboli);// dodaj simbole im dodeljuje i BrTakta               
 			else {
 				std::for_each(simboli.begin(), simboli.end(), [](std::shared_ptr<Simbol> nota) {
 					nota->getTrajanje().setRazlomak(Razlomak(1, 8));
@@ -487,7 +442,6 @@ void Kompozicija::pomocSlova(Mapa* mapa_, std::vector<std::shared_ptr<Simbol>>& 
 				it->dodajTakt(Takt(this->getTrajanjeTakta()));
 				it->getVctTakt().back().dodajSimbole(simboli);
 			}
-			//////////////////////////////NOVONOVONOVO
 		}
 		else if (!it->getVctTakt().back().getPopunjen() && !it->getVctTakt().back().imaMesta(simboli.back())) {
 			std::for_each(simboli.begin(), simboli.end(), [](std::shared_ptr<Simbol> nota) {
@@ -496,9 +450,6 @@ void Kompozicija::pomocSlova(Mapa* mapa_, std::vector<std::shared_ptr<Simbol>>& 
 			});
 			it->getVctTakt().back().dodajSimbole(simboli);
 			it->dodajTakt(Takt(this->getTrajanjeTakta()));
-			//std::for_each(simboli.begin(), simboli.end(), [](std::shared_ptr<Simbol> nota) {///////////AAAAAAAAAAAAAAAAAAAAAAAAAA
-			//	nota->setPrekinuta(false); // da bi znao da mora da se spoji sa prvom iz sledeceg takta.
-			//});
 			it->getVctTakt().back().dodajSimbole(simboli);
 		}
 		else
@@ -511,8 +462,6 @@ void Kompozicija::ispisiSimbol() {
 		std::cout<<*ptrSimbol << "\n";
 	});
 	std::for_each(vctLinSis.back().getIterTakt()->getIterVectSimb()->begin(), vctLinSis.back().getIterTakt()->getIterVectSimb()->end(), [](std::shared_ptr<Simbol> ptrSimbol) {
-		/*std::cout << "\nViolinski sistem:\n" << **vctLinSis.begin()->getIterTakt()->getIterSimbol() << "\n" << std::endl;
-		std::cout << "Bas sistem:\n" << **vctLinSis.back().getIterTakt()->getIterSimbol() << "\n" << std::endl;*/
 		std::cout << *ptrSimbol << "\n";
 	});
 	
@@ -526,10 +475,8 @@ void Kompozicija::uvecajOktavu(int i) {
 	bool sem = true;
 	prikaziPrviSimbol();
 	std::vector<std::shared_ptr<Simbol>>& pocetniLevaSimboli = *getVctLinSis().front().getIterTakt()->getIterVectSimb(); //ovo koristimo samo da znamo kada da prestanemo sa do while loop-om
-	//////////////////////////////////
 	Takt pocetniLevaTakt = *getVctLinSis().front().getIterTakt();
 	Takt pomoc = *getVctLinSis().front().getIterTakt();
-	////////////////////////////////
 	do {
 		this->izmeniOktavuNote(i);
 		nextSimbol();
@@ -544,8 +491,6 @@ void Kompozicija::setPovisilica() {
 	std::for_each(getVctLinSis().back().getIterTakt()->getIterVectSimb()->begin(), getVctLinSis().back().getIterTakt()->getIterVectSimb()->end(), [](std::shared_ptr<Simbol> s) {
 		s->postaviPovisilicu();
 	});
-	//(*getVctLinSis().front().getIterTakt()->getIterSimbol())->postaviPovisilicu();
-	//(*getVctLinSis().back().getIterTakt()->getIterSimbol())->postaviPovisilicu();
 }
 
 void Kompozicija::ukliniPovisilicu() {
@@ -568,7 +513,6 @@ void Kompozicija::izmeniTakt(Mapa& mapa, std::vector<int>& istorija_, bool& konv
 	bool otvorena = true;
 	konvertovano = false;
 	postavljenSimbol = false;
-	/////////////////////////////////////
 	int meni;
 	for (auto it = istorija_.begin(); it != istorija_.end(); it++) {
 		meni = *it;
@@ -648,7 +592,6 @@ void Kompozicija::izmeniTakt(Mapa& mapa, std::vector<int>& istorija_, bool& konv
 				int i;
 				std::cout << "Za koliko zelis da promenis oktavu? ";
 				it++;
-				//*it >> i;
 				i = *it;
 				pomeranjeKompozicije(i);
 			}
@@ -708,17 +651,6 @@ void Kompozicija::izmeniTakt(Mapa& mapa, std::vector<int>& istorija_, bool& konv
 		}
 	}
 
-
-
-	//////////////////////////////////
-
-
-
-
-
-
-
-
 }
 
 void Kompozicija::izmeniOktavuNote(int i) {
@@ -746,7 +678,7 @@ void Kompozicija::izmeniOktavuNote(int i) {
 	}
 	if (pauzaDesna && pauzaLeva)
 		return;
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	std::vector<std::shared_ptr<Simbol>>* prethodniSimboliLeva = nullptr;
 	std::vector<std::shared_ptr<Simbol>>* prethodniSimboliDesna = nullptr;
 	std::vector<std::shared_ptr<Simbol>>* sledeciSimboliLeva = nullptr;
@@ -785,7 +717,7 @@ void Kompozicija::izmeniOktavuNote(int i) {
 			sledeciSimboliDesna->clear();
 		}
 	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 	levaSimboli.clear();
 	desnaSimboli.clear();
 
@@ -866,7 +798,6 @@ std::pair < std::vector<std::vector<std::string>>, std::vector<std::vector<std::
 
 	prikaziPrviSimbol(false);
 	std::vector<std::shared_ptr<Simbol>>& pocetniLevaSimboli = *getVctLinSis().front().getIterTakt()->getIterVectSimb(); //ovo koristimo samo da znamo kada da prestanemo sa do while loop-om
-	//////////////////
 	Takt pocetniLevaTakt = *getVctLinSis().front().getIterTakt();
 	Takt pomoc = *getVctLinSis().front().getIterTakt();
 	do {
@@ -895,10 +826,10 @@ std::pair<std::vector<std::vector<int>>, std::vector<std::vector<int>>> Kompozic
 
 	prikaziPrviSimbol(false);
 	std::vector<std::shared_ptr<Simbol>>& pocetniLevaSimboli = *getVctLinSis().front().getIterTakt()->getIterVectSimb(); //ovo koristimo samo da znamo kada da prestanemo sa do while loop-om
-	//////////////////
+
 	Takt pocetniLevaTakt = *getVctLinSis().front().getIterTakt();
 	Takt pomoc = *getVctLinSis().front().getIterTakt();
-	////////////////////
+
 	do {
 		std::pair<std::vector<std::string>, std::vector<std::string>> pomocna = getOpisSimbola();
 		
@@ -938,10 +869,9 @@ std::pair<std::vector<int>, std::vector<int>> Kompozicija::getRhithm() {
 	prikaziPrviSimbol(false);
 
 	std::vector<std::shared_ptr<Simbol>>& pocetniLevaSimboli = *getVctLinSis().front().getIterTakt()->getIterVectSimb(); //ovo koristimo samo da znamo kada da prestanemo sa do while loop-om
-	////////////////////////
 	Takt pocetniLevaTakt = *getVctLinSis().front().getIterTakt();
 	Takt pomoc = *getVctLinSis().front().getIterTakt();
-	////////////////////////
+
 	do {
 		if ((*vctLinSis.front().getIterTakt()->getIterSimbol())->getPrekinuta()) //ako je prekinuta, automatski znaci da traje 1/4
 			ritamLeve.push_back(3); //ipak smo stavili da je 3, da bi koristili to da znamo gde je prekid tacno
